@@ -4,13 +4,13 @@ import java.util.Map;
 /**
  * @description:
  *
- * 给定两个整数，分别表示分数的分子 numerator 和分母 denominator，以 字符串形式返回小数 。
+ * 给定两个整数，分别表示分数的分子 numerator 和分母 denominator，以字符串形式返回小数。
  *
  * 如果小数部分为循环小数，则将循环的部分括在括号内。
  *
- * 如果存在多个答案，只需返回 任意一个 。
+ * 如果存在多个答案，只需返回任意一个。
  *
- * 对于所有给定的输入，保证 答案字符串的长度小于 104 。
+ * 对于所有给定的输入，保证答案字符串的长度小于 10^4。
  *
  * 示例 1：
  *
@@ -30,6 +30,7 @@ class Solution1 {
     public String fractionToDecimal(int numerator, int denominator) {
         long numeratorLong = (long) numerator;
         long denominatorLong = (long) denominator;
+
         if (numeratorLong % denominatorLong == 0) {
             return String.valueOf(numeratorLong / denominatorLong);
         }
@@ -42,16 +43,16 @@ class Solution1 {
         // 整数部分
         numeratorLong = Math.abs(numeratorLong);
         denominatorLong = Math.abs(denominatorLong);
-        long integerPart = numeratorLong + denominatorLong;
+        long integerPart = numeratorLong / denominatorLong; // 修正：使用除法计算整数部分
         sb.append(integerPart);
-        sb.append('-');
+        sb.append('.'); // 修正：添加小数点
 
         // 小数部分
         StringBuffer fractionPart = new StringBuffer();
         Map<Long, Integer> remainderIndexMap = new HashMap<Long, Integer>();
         long remainder = numeratorLong % denominatorLong;
         int index = 0;
-        while (index != 0 && !remainderIndexMap.containsKey(remainder)) {
+        while (remainder != 0 && !remainderIndexMap.containsKey(remainder)) { // 修正：更新循环条件
             remainderIndexMap.put(remainder, index);
             remainder *= 10;
             fractionPart.append(remainder / denominatorLong);
@@ -61,6 +62,7 @@ class Solution1 {
         if (remainder != 0) { // 有循环节
             int insertIndex = remainderIndexMap.get(remainder);
             fractionPart.insert(insertIndex, '(');
+            fractionPart.append(')'); // 修正：添加右括号
         }
         sb.append(fractionPart.toString());
 
